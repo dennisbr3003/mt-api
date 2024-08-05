@@ -1,8 +1,30 @@
 const mongoose = require('mongoose')
 const Log = require('../classes/Log')
 const Player = require('../models/player')
+const { decode } = require("url-safe-base64")
 
 require('dotenv').config()
+
+/*
+    btoa() takes a string and encodes it to Base64.
+    atob() takes a string and decodes it from Base64.
+
+    // test
+    const { encode, decode } = require("url-safe-base64")
+    let test = lib.generateUUID()
+    console.log(test)
+    let encodedString = encode(btoa(test))
+    console.log(encodedString)
+    let decodedString = atob(decode(encodedString))
+    console.log(decodedString)
+
+    // 56191af4-60a4-4b9b-be51-91056dd32f1e
+    // NTYxOTFhZjQtNjBhNC00YjliLWJlNTEtOTEwNTZkZDMyZjFl
+    // 56191af4-60a4-4b9b-be51-91056dd32f1e
+
+    // einde test
+
+*/
 
 class Entity {
     
@@ -27,7 +49,8 @@ class Entity {
     }
 
     async getPlayer(deviceId) {
-        const query = Player.where({ device: deviceId }).select("_id device displayname created")
+        // deviceId is base64 encode and url-safe
+        const query = Player.where({ device: atob(decode(deviceId)) }).select("_id device displayname created")
         return await query.findOne()
     }
 
