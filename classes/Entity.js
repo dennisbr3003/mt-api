@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 const Log = require('../classes/Log')
 const Player = require('../models/player')
-
 const { decode } = require("url-safe-base64")
 
 require('dotenv').config()
