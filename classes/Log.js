@@ -27,7 +27,7 @@ class Log {
         await this.#writeline(new Date(), this.#getLogFileName(new Date()), await this.#checkversion())
 
         await this.#writeline(new Date(), this.#getLogFileName(new Date()), `Root: ${this.root}`)
-        await this.#writeline(new Date(), this.#getLogFileName(new Date()), 'Started app.js')
+        await this.#writeline(new Date(), this.#getLogFileName(new Date()), 'Started api.js')
         await this.#writeline(new Date(), this.#getLogFileName(new Date()), `Listening on port ${process.env.PORT}`)
       
     }

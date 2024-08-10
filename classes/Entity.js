@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 const Log = require('../classes/Log')
 const Player = require('../models/player')
+const App = require('../models/app')
+
 const { decode } = require("url-safe-base64")
 
 require('dotenv').config()
@@ -53,6 +55,12 @@ class Entity {
         const query = Player.where({ device: atob(decode(deviceId)) }).select("_id device displayname created")
         return await query.findOne()
     }
+
+    async getApp(appId) {
+        // deviceId is base64 encode and url-safe
+        const query = App.where({ app: appId })
+        return await query.findOne()
+    }    
 
 }
 

@@ -13,10 +13,10 @@
   "name": "mt-api",
   "version": "1.0.0",
   "description": "API Math Thingy",
-  "main": "app.js",
+  "main": "api.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js --ext ejs,js,mjs,cjs,json"
+    "start": "nodemon api.js --ext ejs,js,mjs,cjs,json"
   },
   "author": "Dennis Brink",
   "license": "ISC"
