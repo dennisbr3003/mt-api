@@ -1,5 +1,5 @@
 const express = require('express')
-const Entity = require('./classes/Entity')
+const Entity = require('./classes/Entity.js')
 
 require('dotenv').config()
 
