@@ -20,7 +20,7 @@ const appSchema = new Schema({
     },    
 }, { timestamps: true })
 
-// be ware of the naming convention here. Mongoose will pluralise this and use it as the collection name in de database!! (Player -> Players)
+// be ware of the naming convention here. Mongoose will pluralise this and use it as the collection name in de database!! (App -> Apps)
 const App = mongoose.model('App', appSchema)
 
 module.exports = App
