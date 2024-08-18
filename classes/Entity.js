@@ -2,31 +2,12 @@ const mongoose = require('mongoose')
 const Log = require('../classes/Log')
 const Player = require('../models/player')
 const App = require('../models/app')
-
+const Message = require('../models/message')
 const { decode } = require("url-safe-base64")
 
+const lib = require('../lib/uuid')
+
 require('dotenv').config()
-
-/*
-    btoa() takes a string and encodes it to Base64.
-    atob() takes a string and decodes it from Base64.
-
-    // test
-    const { encode, decode } = require("url-safe-base64")
-    let test = lib.generateUUID()
-    console.log(test)
-    let encodedString = encode(btoa(test))
-    console.log(encodedString)
-    let decodedString = atob(decode(encodedString))
-    console.log(decodedString)
-
-    // 56191af4-60a4-4b9b-be51-91056dd32f1e
-    // NTYxOTFhZjQtNjBhNC00YjliLWJlNTEtOTEwNTZkZDMyZjFl
-    // 56191af4-60a4-4b9b-be51-91056dd32f1e
-
-    // einde test
-
-*/
 
 class Entity {
     
@@ -52,15 +33,37 @@ class Entity {
 
     async getPlayer(deviceId) {
         // deviceId is base64 encode and url-safe
-        const query = Player.where({ device: atob(decode(deviceId)) }).select("_id device displayname created")
-        return await query.findOne()
+        const query = Player.where({ deviceId: atob(decode(deviceId)) }).select("_id deviceId displayName email")
+        return await query.findOne() // player object is returned
+    }
+
+    async addNewMessage(msg) {
+        // smart naming in the form makes this object reusable without editing (see message.js)
+        const message = new Message(msg) 
+        // update some fields on save
+        message.messageUUID = lib.generateUUID()    
+ 
+        try{
+            // console.log(res) // to trigger an error
+            return await message.save() // message is returned            
+        } catch(err) {
+            msg.resultCode = 1
+            //return {save: false, message: `Entity: message not saved: ${err.message}`}
+            return msg
+        }
     }
 
     async getApp(appId) {
-        // deviceId is base64 encode and url-safe
         const query = App.where({ app: appId })
-        return await query.findOne()
+        return await query.findOne() // app object is returned
     }    
+
+    async updatePlayer(msg) {
+        const filter = { deviceId: msg.deviceId } // find by device id
+        const update = { displayName: msg.name, email: msg.email, language: msg.language} // update the fields
+        const player = await Player.findOneAndUpdate(filter, update)
+        return player
+    }
 
 }
 

@@ -122,14 +122,14 @@ class Log {
         foldercontent.forEach(element => {
              if(element.isFile()){
                 // path is deprecated since v20.1.0
-                fs.promises.stat(`${element.parentPath}${element.name}`, (err, stat) => {
+                fs.stat(`${element.parentPath}${element.name}`, (err, stat) => {
                     if(err){
                         console.log(err)
                     } else {
                         //check if the file is older then 30 days (in millies). If so, then delete the file
                         if((stat.mtimeMs - (new Date(stat.mtime).getTimezoneOffset() * 60 * 1000)) + 
                            (process.env.LOGLIVE * 24 * 60 * 60 * 1000) < Date.now()){
-                            fs.promises.unlink(`${element.parentPath}${element.name}`,(err => {
+                            fs.unlink(`${element.parentPath}${element.name}`,(err => {
                                 if(err) console.log(err.message)                        
                                 else this.#writeline(new Date(), this.#getLogFileName(new Date()), `Deleted ${element.parentPath}${element.name}`)
                            }))
