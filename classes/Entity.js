@@ -65,6 +65,17 @@ class Entity {
         return player
     }
 
+    async getUnreadMessagesCount(deviceId) {
+        // if the parentUUID is present and filled it's a reply to another message.
+        // deviceId is the mailbox or mail conversiotion
+        // senderId is the player or the one that responds. isRead is always false if deviceId and senderId are equal.
+        // parentUUID is used to connect one message to another (question - reply or replies) is is filled with the UUID of the messages it is a reply to
+        // message send by a player typically do not have a parentUUID, and deviceId and senderId are equal
+        // Below we count messages that belong to the deviceId conversation but have a different senderId and are not read
+        const messageCount = await Message.countDocuments({deviceId: deviceId, senderId: {$ne: deviceId}, isRead: false})
+        return {unreadMessages: messageCount}
+    }
+
 }
 
 module.exports = Entity

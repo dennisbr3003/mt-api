@@ -48,6 +48,12 @@ app.post('/message', async (req, res) => {
     res.status(404).json({type: '404', message: 'resource could not be found' }) // dit moet een foutmelding in de pagina worden en dan iets als render.back
 })
 
+app.get('/message/unread/:deviceId', async (req, res) => {
+    const result = await entity.getUnreadMessagesCount(req.params.deviceId)
+    res.status(200).json(result)
+    return
+})
+
 app.use(async (req, res) => {
     res.status(500).json({type: '500', message: 'unknown or erroneous request' })
 })
