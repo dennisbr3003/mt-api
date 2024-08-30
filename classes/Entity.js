@@ -23,9 +23,11 @@ class Entity {
     }   
 
     #connectToMongo = async () => {
-        try{    
-            await mongoose.connect(this.dbURI);
-            this.log.write('', 'Entity: Connected to remote MongoDB')
+        try{  
+            if(mongoose.connection.readyState===0) {
+                await mongoose.connect(this.dbURI)
+                this.log.write('', 'Entity: Connected to remote MongoDB')
+            } 
         } catch(err) {
             this.log.write('', `Entity: Not connected to remote MongoDB ${err.message}`)
         }
@@ -45,11 +47,18 @@ class Entity {
  
         try{
             // console.log(res) // to trigger an error
-            return await message.save() // message is returned            
+            const result = await message.save() // message is returned   
+            if(msg.updateRegistration) await this.updatePlayer(msg)         
+
+            if(msg.resultCode === 1) {
+                this.log.write('', `Entity, addNewMessage: message not saved, exited with errorcode 1`)
+                return {type: 500, message: `Entity, addNewMessage: message not saved, exited with errorcode 1`}
+            } else {
+                return {type: 200, message: 'Message saved' }
+            }
         } catch(err) {
-            msg.resultCode = 1
-            //return {save: false, message: `Entity: message not saved: ${err.message}`}
-            return msg
+            this.log.write('', `Entity, addNewMessage: message not saved (${err.message})`)
+            return {type: 500, message: `Entity, addNewMessage: message not saved (${err.message})`}
         }
     }
 
