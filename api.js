@@ -38,14 +38,8 @@ app.get('/player/:deviceId?', async (req, res) => {
 
 app.post('/message', async (req, res) => {
     const result = await entity.addNewMessage(req.body)
-    if(result!==null){
-        if(result.updateRegistration){
-            const plr = await entity.updatePlayer(req.body) // hier wordt het oude record teruggegeven
-        }
-        res.status(200).json(result)
-        return
-    } 
-    res.status(404).json({type: '404', message: 'resource could not be found' }) // dit moet een foutmelding in de pagina worden en dan iets als render.back
+    res.status(result.type).json(result) 
+    return
 })
 
 app.get('/message/unread/:deviceId', async (req, res) => {
