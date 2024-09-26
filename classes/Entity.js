@@ -3,7 +3,6 @@ const Log = require('../classes/Log')
 const Player = require('../models/player')
 const App = require('../models/app')
 const Message = require('../models/message')
-const { decode } = require("url-safe-base64")
 
 const lib = require('../lib/uuid')
 
@@ -35,7 +34,7 @@ class Entity {
 
     async getPlayer(deviceId) {
         // deviceId is base64 encode and url-safe
-        const query = Player.where({ deviceId: atob(decode(deviceId)) }).select("_id deviceId displayName email")
+        const query = Player.where({ deviceId: decodeBase64Url(deviceId) }).select("_id deviceId displayName email")
         return await query.findOne() // player object is returned
     }
 
