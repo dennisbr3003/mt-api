@@ -14,7 +14,6 @@ const initMiddleWares = async () => {
     await entity.init() 
 }
 
-
 initMiddleWares()
 
 // decrypt token
@@ -23,11 +22,10 @@ const decryptToken = async(token, req) => {
         let params = []
         const cryptr = new Cryptr(process.env.CPWD)
         params = cryptr.decrypt(token).split('.')
-
         
-        if(params.length!==2) throw {type: 500, message: 'Correpted token'}
-        if(params[0]==='') throw {type: 500, message: 'Correpted token'}
-        if(params[1]==='') throw {type: 500, message: 'Correpted token'}
+        if(params.length!==2) throw {type: 500, message: 'Corrupted token'}
+        if(params[0]==='') throw {type: 500, message: 'Corrupted token'}
+        if(params[1]==='') throw {type: 500, message: 'Corrupted token'}
         if(+params[1] < +Date.now()) throw {type: 500, message: 'Expired token'}    
         
         let app = await entity.getApp(params[0])    
